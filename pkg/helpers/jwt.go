@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"finalProject2/infrastructure/config"
 	"errors"
 	"fmt"
 	"strings"
@@ -9,7 +10,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secretKey = "initokenrahasia"
 
 func GenerateToken(id int, email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -17,7 +17,7 @@ func GenerateToken(id int, email string) (string, error) {
 		"email": email,
 	})
 
-	tokenString, err := token.SignedString([]byte(secretKey))
+	tokenString, err := token.SignedString([]byte(config.GetAppConfig().JWTSecretKey))
 
 	if err != nil {
 		return "", err
@@ -39,10 +39,10 @@ func VerifyToken(c *gin.Context) (interface{}, error) {
 
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
 
-		return []byte(secretKey), nil
+		return []byte(config.GetAppConfig().JWTSecretKey), nil
 	})
 
 	if err != nil {

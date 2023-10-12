@@ -1,6 +1,8 @@
 package database
 
 import (
+	"finalProject2/infrastructure/config"
+
 	"database/sql"
 	"fmt"
 	"log"
@@ -8,14 +10,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "password"
-	dbname   = "final-project-2"
-	dialect  = "postgres"
-)
 
 var (
 	db  *sql.DB
@@ -23,11 +17,12 @@ var (
 )
 
 func handleDatabaseConnection() {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname,
+	appConfig := config.GetAppConfig()
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		appConfig.DBHost, appConfig.DBPort, appConfig.DBUser, appConfig.DBPassword, appConfig.DBName,
 	)
 
-	db, err = sql.Open(dialect, psqlInfo)
+	db, err = sql.Open(appConfig.DBDialect, psqlInfo)
 
 	if err != nil {
 		log.Panic("error occured while trying to validate database arguments:", err)
