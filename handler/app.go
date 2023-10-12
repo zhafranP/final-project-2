@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"finalProject2/database"
+	"finalProject2/infrastructure/config"
+	"finalProject2/infrastructure/database"
 	middlewares "finalProject2/pkg/middleware"
 	"finalProject2/repository/photo_repository/photo_pg"
 	"finalProject2/repository/user_repository/user_pg"
@@ -11,6 +12,7 @@ import (
 )
 
 func StartApp() {
+	config.LoadAppConfig()
 	database.InitiliazeDatabase()
 	db := database.GetDatabaseInstance()
 
@@ -46,6 +48,6 @@ func StartApp() {
 		photos.DELETE("/:photoId", photoHandler.DeletePhoto)
 	}
 
-	r.Run(":8080")
+	r.Run(":" + config.GetAppConfig().Port)
 
 }
