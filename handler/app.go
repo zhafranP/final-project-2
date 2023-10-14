@@ -4,6 +4,7 @@ import (
 	"finalProject2/infrastructure/config"
 	"finalProject2/infrastructure/database"
 	middlewares "finalProject2/pkg/middleware"
+	"finalProject2/repository/comment_repository/comment_pg"
 	"finalProject2/repository/photo_repository/photo_pg"
 	"finalProject2/repository/user_repository/user_pg"
 	"finalProject2/service"
@@ -26,6 +27,11 @@ func StartApp() {
 	photoService := service.NewPhotoService(photoRepo)
 	photoHandler := NewPhotoHandler(photoService)
 
+	// comment
+	commentRepo := comment_pg.NewCommentPG(db)
+	commentService := service.NewCommentService(commentRepo)
+	commentHandler := NewCommentHandler(commentService)
+
 	r := gin.Default()
 
 	//user
@@ -34,6 +40,8 @@ func StartApp() {
 
 	users := r.Group("/users")
 	photos := r.Group("/photos")
+	comments := r.Group("/comments")
+
 	users.Use(middlewares.Authentication())
 	{
 		users.PUT("", userHandler.EditUser)
@@ -46,6 +54,14 @@ func StartApp() {
 		photos.GET("", photoHandler.GetPhotos)
 		photos.PUT("/:photoId", photoHandler.EditPhoto)
 		photos.DELETE("/:photoId", photoHandler.DeletePhoto)
+	}
+
+	comments.Use(middlewares.Authentication())
+	{
+		comments.POST("", commentHandler.CreateComment)
+		comments.GET("", commentHandler.GetComments)
+		comments.PUT("/:commentId", commentHandler.UpdateComment)
+		comments.DELETE("/:commentId", commentHandler.DeleteComment)
 	}
 
 	r.Run(":" + config.GetAppConfig().Port)

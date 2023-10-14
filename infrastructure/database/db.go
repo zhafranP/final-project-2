@@ -10,7 +10,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-
 var (
 	db  *sql.DB
 	err error
@@ -58,7 +57,7 @@ func createTables() {
 			photo_url text NOT NULL,
 			created_at timestamptz DEFAULT current_timestamp,
 			updated_at timestamptz DEFAULT current_timestamp,
-			FOREIGN KEY (user_id) REFERENCES users (id)
+			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 		)
 	`
 
@@ -70,7 +69,7 @@ func createTables() {
 			social_media_url text NOT NULL,
 			created_at timestamptz DEFAULT current_timestamp,
 			updated_at timestamptz DEFAULT current_timestamp,
-			FOREIGN KEY (user_id) REFERENCES users (id)
+			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 		)
 	`
 
@@ -82,8 +81,8 @@ func createTables() {
 			message text NOT NULL,
 			created_at timestamptz DEFAULT current_timestamp,
 			updated_at timestamptz DEFAULT current_timestamp,
-			FOREIGN KEY (user_id) REFERENCES users (id),
-			FOREIGN KEY (photo_id) REFERENCES photos (id)
+			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE, 
+			FOREIGN KEY (photo_id) REFERENCES photos (id) ON DELETE CASCADE
 		)
 	`
 
