@@ -3,6 +3,7 @@ package service
 import (
 	"finalProject2/dto"
 	"finalProject2/pkg/errs"
+	"finalProject2/pkg/helpers"
 	"finalProject2/repository/photo_repository"
 )
 
@@ -22,6 +23,11 @@ func NewPhotoService(photoRepo photo_repository.Repository) PhotoService {
 }
 
 func (ps *photoService) CreatePhoto(p dto.NewPhotoRequest) (*dto.NewPhotoResponse, errs.Error) {
+	validateErr := helpers.ValidateStruct(&p)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+
 	resp, err := ps.photoRepo.CreatePhoto(p)
 
 	if err != nil {

@@ -4,7 +4,7 @@ import "time"
 
 type NewCommentRequest struct {
 	UserID  int    `json:"user_id"`
-	Message string `json:"message"`
+	Message string `json:"message" validate:"required"`
 	PhotoID int    `json:"photo_id"`
 }
 
@@ -47,7 +47,7 @@ type GetCommentsResponse struct {
 
 type UpdateCommentRequest struct {
 	ID      int    `json:"id"`
-	Message string `json:"message"`
+	Message string `json:"message" validate:"required"`
 	UserID  int    `json:"user_id"`
 }
 

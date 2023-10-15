@@ -25,6 +25,11 @@ func NewUserService(userRepo user_repository.Repository) UserService {
 }
 
 func (userService *userService) CreateUser(newUser dto.NewUserRequest) (*dto.NewUserResponse, errs.Error) {
+	validateErr := helpers.ValidateStruct(&newUser)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+
 	generatePW, err := helpers.GenerateHashedPassword([]byte(newUser.Password))
 	if err != nil {
 		return nil, errs.NewInternalServerError(err.Error())
@@ -41,6 +46,11 @@ func (userService *userService) CreateUser(newUser dto.NewUserRequest) (*dto.New
 }
 
 func (userService *userService) Login(u dto.LoginRequest) (*dto.LoginResponse, errs.Error) {
+	validateErr := helpers.ValidateStruct(&u)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+
 	user, err := userService.UserRepo.Login(u.Email)
 	if err != nil {
 		return nil, err
@@ -65,6 +75,10 @@ func (userService *userService) Login(u dto.LoginRequest) (*dto.LoginResponse, e
 }
 
 func (userService *userService) UpdateUser(u dto.UpdateUserRequest) (*dto.UpdateUserResponse, errs.Error) {
+	validateErr := helpers.ValidateStruct(&u)
+	if validateErr != nil {
+		return nil, validateErr
+	}
 
 	user, err := userService.UserRepo.EditUser(u)
 	if err != nil {

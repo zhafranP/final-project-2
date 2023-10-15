@@ -3,10 +3,10 @@ package dto
 import "time"
 
 type NewUserRequest struct {
-	Age      int    `json:"age"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Username string `json:"username"`
+	Age      int    `json:"age" validate:"required,gt=8"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=6"`
+	Username string `json:"username" validate:"required,unique"`
 }
 
 type NewUserResponse struct {
@@ -20,8 +20,8 @@ type NewUserResponse struct {
 
 type LoginRequest struct {
 	// status 200
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type LoginResponse struct {
@@ -30,8 +30,8 @@ type LoginResponse struct {
 
 type UpdateUserRequest struct {
 	ID       int    `json:"id"`
-	Email    string `json:"email"`
-	Username string `json:"username"`
+	Email    string `json:"email" validate:"required,email"`
+	Username string `json:"username" validate:"required"`
 }
 
 type UpdateUserResponse struct {

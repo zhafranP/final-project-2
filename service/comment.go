@@ -3,6 +3,7 @@ package service
 import (
 	"finalProject2/dto"
 	"finalProject2/pkg/errs"
+	"finalProject2/pkg/helpers"
 	"finalProject2/repository/comment_repository"
 )
 
@@ -24,6 +25,10 @@ func NewCommentService(commentRepo comment_repository.Repository) CommentService
 }
 
 func (cs *commentService) CreateComment(c dto.NewCommentRequest) (*dto.NewCommentResponse, errs.Error) {
+	validateErr := helpers.ValidateStruct(&c)
+	if validateErr != nil {
+		return nil, validateErr
+	}
 
 	photoExist, err := cs.commentRepo.PhotoExist(c.PhotoID, c.UserID)
 	if err != nil {
