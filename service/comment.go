@@ -67,6 +67,11 @@ func (cs *commentService) EditComment(c dto.UpdateCommentRequest) (*dto.UpdateCo
 		return nil, errs.NewUnauthorizedError("You don't have permission to access this comment")
 	}
 
+	validateErr := helpers.ValidateStruct(&c)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+
 	resp, err := cs.commentRepo.EditComment(c)
 	if err != nil {
 		return nil, err

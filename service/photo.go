@@ -57,6 +57,11 @@ func (ps *photoService) UpdatePhotos(p dto.UpdatePhotoRequest) (*dto.UpdatePhoto
 		return nil, errs.NewUnauthorizedError("You don't have permission to access this photo")
 	}
 
+	validateErr := helpers.ValidateStruct(&p)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+
 	resp, err := ps.photoRepo.EditPhoto(p)
 	if err != nil {
 		return nil, err

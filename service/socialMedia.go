@@ -3,6 +3,7 @@ package service
 import (
 	"finalProject2/dto"
 	"finalProject2/pkg/errs"
+	"finalProject2/pkg/helpers"
 	social_media_repository "finalProject2/repository/socialMedia_repository"
 )
 
@@ -22,6 +23,11 @@ type socialMediaService struct {
 }
 
 func (sc *socialMediaService) CreateSocialMedia(s dto.NewSocialMediaRequest) (*dto.NewSocialMediaResponse, errs.Error) {
+	validateErr := helpers.ValidateStruct(&s)
+	if validateErr != nil {
+		return nil, validateErr
+	}
+
 	resp, err := sc.socialMediaRepo.CreateSocialMedia(s)
 	if err != nil {
 		return nil, err
