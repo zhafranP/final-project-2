@@ -25,7 +25,7 @@ const (
 	`
 
 	editUser = `
-		UPDATE users SET email = $1, username = $2  WHERE id = $3
+		UPDATE users SET email = $1, username = $2, updated_at = current_timestamp  WHERE id = $3
 		RETURNING id,email,username,age,updated_at
 	`
 

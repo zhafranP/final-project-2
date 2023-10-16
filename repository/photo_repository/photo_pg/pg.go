@@ -33,7 +33,7 @@ const (
 	`
 
 	editPhoto = `
-		UPDATE photos SET title = $1, caption = $2, photo_url = $3
+		UPDATE photos SET title = $1, caption = $2, photo_url = $3, updated_at = current_timestamp
 		WHERE id = $4
 		RETURNING id,title,caption,photo_url,user_id,updated_at
 	`

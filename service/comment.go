@@ -25,7 +25,7 @@ func NewCommentService(commentRepo comment_repository.Repository) CommentService
 
 func (cs *commentService) CreateComment(c dto.NewCommentRequest) (*dto.NewCommentResponse, errs.Error) {
 
-	photoExist, err := cs.commentRepo.PhotoExist(c.PhotoID, c.UserID)
+	photoExist, err := cs.commentRepo.PhotoExist(c.PhotoID)
 	if err != nil {
 		return nil, err
 	}

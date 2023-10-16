@@ -11,5 +11,5 @@ type Repository interface {
 	GetComments(userId int) (*dto.GetCommentsResponse, errs.Error)
 	EditComment(c dto.UpdateCommentRequest) (*dto.UpdateCommentResponse, errs.Error)
 	DeleteComment(id int) errs.Error
-	PhotoExist(photoId, userId int) (bool, errs.Error)
+	PhotoExist(photoId int) (bool, errs.Error)
 }

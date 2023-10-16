@@ -26,7 +26,7 @@ const (
 	`
 
 	photoExist = `
-		SELECT COUNT(1) FROM photos WHERE id = $1 AND user_id = $2
+		SELECT COUNT(1) FROM photos WHERE id = $1 
 	`
 
 	getComments = `
@@ -34,7 +34,7 @@ const (
 			comments.id,comments.message,comments.photo_id,
 			comments.user_id,comments.updated_at,
 			comments.created_at,
-			photos.title,photos.caption,
+			photos.id,photos.title,photos.caption,
 			photos.photo_url,
 			users.email,users.username
 		FROM comments 
@@ -46,7 +46,11 @@ const (
 	`
 
 	updateComment = `
-		UPDATE comments SET message = $1 WHERE id = $2
+		UPDATE comments SET message = $1, updated_at = current_timestamp WHERE id = $2
+	`
+
+	getUserIdFromPhoto = `
+		SELECT user_id FROM photos WHERE id = $1	
 	`
 
 	getUserIdFromComment = `
@@ -103,10 +107,10 @@ func (commentPG *commentPG) GetUserId(id int) (int, errs.Error) {
 	return userId, nil
 }
 
-func (commentPG *commentPG) PhotoExist(photoId, userId int) (bool, errs.Error) {
+func (commentPG *commentPG) PhotoExist(photoId int) (bool, errs.Error) {
 	var count int
 
-	err := commentPG.db.QueryRow(photoExist, photoId, userId).Scan(
+	err := commentPG.db.QueryRow(photoExist, photoId).Scan(
 		&count,
 	)
 
@@ -139,7 +143,7 @@ func (commentPG *commentPG) GetComments(userId int) (*dto.GetCommentsResponse, e
 		err := rows.Scan(
 			&comment.ID, &comment.Message, &comment.PhotoID,
 			&comment.UserID, &comment.UpdatedAt, &comment.CreatedAt,
-			&photo.Title, &photo.Caption, &photo.PhotoURL,
+			&photo.ID, &photo.Title, &photo.Caption, &photo.PhotoURL,
 			&user.Email, &user.Username,
 		)
 
