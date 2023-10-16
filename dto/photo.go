@@ -3,9 +3,9 @@ package dto
 import "time"
 
 type NewPhotoRequest struct {
-	Title    string `json:"title"`
+	Title    string `json:"title" validate:"required"`
 	Caption  string `json:"caption"`
-	PhotoURL string `json:"photo_url"`
+	PhotoURL string `json:"photo_url" validate:"required"`
 	UserID   int    `json:"user_id"`
 }
 
