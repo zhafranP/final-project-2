@@ -1,6 +1,6 @@
 module finalProject2
 
-go 1.21.0
+go 1.23.0
 
 require (
 	github.com/bytedance/sonic v1.10.2 // indirect
