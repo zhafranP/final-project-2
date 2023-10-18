@@ -32,6 +32,14 @@ const (
 	deleteUser = `
 		DELETE FROM users WHERE id = $1
 	`
+
+	countEmail = `
+		SELECT COUNT(1) FROM users WHERE email = $1
+	`
+
+	countUsername = `
+		SELECT COUNT(1) FROM users WHERE username = $1
+	`
 )
 
 type userPG struct {
@@ -90,4 +98,26 @@ func (userPG *userPG) DeleteUser(id int) errs.Error {
 	}
 
 	return nil
+}
+
+func (userPG *userPG) CountEmail(email string) (int, errs.Error) {
+	var count int
+
+	err := userPG.db.QueryRow(countEmail, email).Scan(&count)
+	if err != nil {
+		return 0, errs.NewInternalServerError(err.Error())
+	}
+
+	return count, nil
+}
+
+func (userPG *userPG) CountUsername(username string) (int, errs.Error) {
+	var count int
+
+	err := userPG.db.QueryRow(countUsername, username).Scan(&count)
+	if err != nil {
+		return 0, errs.NewInternalServerError(err.Error())
+	}
+
+	return count, nil
 }

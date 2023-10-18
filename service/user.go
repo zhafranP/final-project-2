@@ -30,9 +30,27 @@ func (userService *userService) CreateUser(newUser dto.NewUserRequest) (*dto.New
 		return nil, validateErr
 	}
 
-	generatePW, err := helpers.GenerateHashedPassword([]byte(newUser.Password))
+	countEmail, err := userService.UserRepo.CountEmail(newUser.Email)
 	if err != nil {
-		return nil, errs.NewInternalServerError(err.Error())
+		return nil, err
+	}
+
+	if countEmail > 0 {
+		return nil, errs.NewBadRequest("Email Has Already Been Used")
+	}
+
+	countUsername, err := userService.UserRepo.CountUsername(newUser.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	if countUsername > 0 {
+		return nil, errs.NewBadRequest("Username Has Already Been Used")
+	}
+
+	generatePW, errPW := helpers.GenerateHashedPassword([]byte(newUser.Password))
+	if errPW != nil {
+		return nil, errs.NewInternalServerError(errPW.Error())
 	}
 
 	newUser.Password = generatePW
@@ -78,6 +96,24 @@ func (userService *userService) UpdateUser(u dto.UpdateUserRequest) (*dto.Update
 	validateErr := helpers.ValidateStruct(&u)
 	if validateErr != nil {
 		return nil, validateErr
+	}
+
+	countEmail, err := userService.UserRepo.CountEmail(u.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	if countEmail > 0 {
+		return nil, errs.NewBadRequest("Email Has Already Been Used")
+	}
+
+	countUsername, err := userService.UserRepo.CountUsername(u.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	if countUsername > 0 {
+		return nil, errs.NewBadRequest("Username Has Already Been Used")
 	}
 
 	user, err := userService.UserRepo.EditUser(u)

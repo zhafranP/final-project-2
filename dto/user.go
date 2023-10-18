@@ -6,7 +6,7 @@ type NewUserRequest struct {
 	Age      int    `json:"age" validate:"required,gt=8"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=6"`
-	Username string `json:"username" validate:"required,unique"`
+	Username string `json:"username" validate:"required"`
 }
 
 type NewUserResponse struct {
