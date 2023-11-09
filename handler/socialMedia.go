@@ -50,7 +50,7 @@ func (sh *SocialMediaHandler) GetSocialMedias(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, resp)
+	c.JSON(http.StatusCreated, resp.Data)
 
 }
 
