@@ -50,7 +50,7 @@ func (ch *commentHandler) GetComments(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, resp.Data)
 }
 
 func (ch *commentHandler) UpdateComment(c *gin.Context) {
